@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React from "react";
 import MealItem from "./MealItem";
-import Card from "../../UI/Card/Card.js";
+import Card from "../UI/Card/Card.js";
 import style from "./AvailableMeals.module.css";
 
 const DUMMY_MEALS = [
@@ -31,10 +31,7 @@ const DUMMY_MEALS = [
 ];
 
 const AvailableMeals = (props) => {
-  const [meals, setMeals] = useState(DUMMY_MEALS);
-  const displayExpenses = (meal) => {
-    setMeals(DUMMY_MEALS);
-  };
+  const meals = DUMMY_MEALS;
 
   return (
     <React.Fragment>
@@ -42,6 +39,7 @@ const AvailableMeals = (props) => {
           <ul>
             {meals.map((meal) => (
               <MealItem
+                id={meal.id}
                 key={meal.id}
                 name={meal.name}
                 description={meal.description}

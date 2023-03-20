@@ -1,10 +1,9 @@
-import React, { Fragment } from "react";
+import React from "react";
 import style from "./MealsSummary.module.css";
 
 const MealsSummary = () => {
   return (
-    <Fragment>
-        <div className={style.summary}>
+    <section className={style.summary}>
       <h2>Delicious Food, Delivered To You</h2>
       <p>
         Choose your favorite meal from our broad selection of available meals
@@ -14,8 +13,7 @@ const MealsSummary = () => {
         All our meals are cooked with high-quality ingredients, just-in-time and
         of course by experienced chefs.
       </p>
-      </div>
-    </Fragment>
+    </section>
   );
 };
 
