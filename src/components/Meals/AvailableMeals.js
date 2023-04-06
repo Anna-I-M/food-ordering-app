@@ -1,54 +1,78 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import MealItem from "./MealItem";
 import Card from "../UI/Card/Card.js";
 import style from "./AvailableMeals.module.css";
 
-const DUMMY_MEALS = [
-  {
-    id: "m1",
-    name: "Sushi",
-    description: "Finest fish and veggies",
-    price: 22.99,
-  },
-  {
-    id: "m2",
-    name: "Schnitzel",
-    description: "A german specialty!",
-    price: 16.5,
-  },
-  {
-    id: "m3",
-    name: "Barbecue Burger",
-    description: "American, raw, meaty",
-    price: 12.99,
-  },
-  {
-    id: "m4",
-    name: "Green Bowl",
-    description: "Healthy...and green...",
-    price: 18.99,
-  },
-];
-
 const AvailableMeals = (props) => {
-  const meals = DUMMY_MEALS;
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [meals, setMeals] = useState([]);
 
+  useEffect(() => {
+    const fetchMeals = async () => {
+      setIsLoading(true);
+      setError(null);
+
+      const response = await fetch(
+        "https://food-ordering-app-3c4a3-default-rtdb.firebaseio.com/meals.json"
+      );
+      const data = await response.json();
+      const loadedData = [];
+
+      if (!response.ok) {
+        throw new Error("Request failed!");
+      }
+
+      for (const key in data) {
+        loadedData.push({
+          id: key,
+          name: data[key].name,
+          description: data[key].description,
+          price: data[key].price,
+        });
+      }
+
+      setMeals(loadedData);
+      setIsLoading(false);
+    }
+
+      fetchMeals().catch((err) => {
+        setIsLoading(false);
+        setError(err.message || "Something went wrong!");
+      })
+  }, []);
+
+  if (isLoading) {
+    return (
+      <section className={style.mealsLoading}>
+        <p>Loading...</p>
+      </section>
+    );
+  }
+
+  if (error) {
+    return (
+      <section className={style.mealsError}>
+        <p>{error}</p>
+      </section>
+    );
+  }
   return (
-    <React.Fragment>
-      <Card className={style["meals"]}>
-          <ul>
-            {meals.map((meal) => (
-              <MealItem
-                id={meal.id}
-                key={meal.id}
-                name={meal.name}
-                description={meal.description}
-                price={meal.price}
-              />
-            ))}
-          </ul>
+    <section className={style["meals"]}>
+      <Card>
+        <ul>
+          {meals.map((meal) => (
+            <MealItem
+              id={meal.id}
+              key={meal.id}
+              name={meal.name}
+              description={meal.description}
+              price={meal.price}
+            />
+          ))}
+        </ul>
       </Card>
-    </React.Fragment>
+    </section>
   );
 };
 
